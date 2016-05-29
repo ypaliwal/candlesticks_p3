@@ -1,0 +1,180 @@
+<div class="row">
+<div class="container">
+<div class="col-sm-12">
+
+	<div class="jumbotron">
+	<div class="row">
+		<h2>CANDLESTICKS</h2>
+		<p>An Online Stock Portfolio & Charting App</p>
+		<p class="smallerP">Code posted here: <a href="">GitHub</a></p>
+		<ol class="breadcrumb col-sm-12" id="port">
+			<li><a ng-click="ctrl.scrollTo('port')">Portfolio</a></li>
+			<li><a ng-click="ctrl.scrollTo('graph')">Graphs</a></li>
+			<li><a href="#">News</a></li>
+		</ol>	
+	</div>
+	</div>
+	
+		
+	<!-- PORTFOLIO TABLE -->
+	<div class="portfolio">
+		<div class="abovePortfolio col-sm-12">
+			<h3 id="port">Stock Portfolio</h3>
+			<div class="portfolio-buttons" id="portButtons">
+				<button class="btn btn-success" ng-click="ctrl.scrollTo('addStock')">Add a Stock</button>
+				<button class="btn btn-info" ng-click="ctrl.exData()">Add Example Data</button>
+			</div>
+		</div>
+		<!-- POPULATE DATA FROM DATABASE -->
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Ticker</th>
+					<th>Company</th>
+					<th>Purchase Price</th>
+					<th>Current Price</th>
+					<th>Units Owned</th>
+					<th>Book Value</th>
+					<th>% Change</th>
+					<th>Market Value</th>
+					<th>Delete?</th>
+					<th>Update?</th>
+					<th>Chart?</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in ctrl.dataArr | orderBy:'ticker'">  <!-- | orderBy:'make' -->
+					<td>{{item.ticker}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.purchasePrice | currency}}</td>
+					<td>{{item.currPrice | currency}}</td>
+					<td>{{item.quantity}}</td>
+					<td>{{item.bookValue | currency}}</td>
+					<td ng-class="{ 'lossFontColor': (item.percentageChange < 0) }">{{item.percentageChange | number:1}}%</td>
+					<td>{{item.marketPrice | currency}}</td>
+					<td class="delete"><button class="btn btn-danger" ng-click="ctrl.deleteStock(item._id)">X</button></td>
+					<td class="update"><button class="btn btn-info" ng-click="ctrl.updateStock(item._id)">?</button></td>
+					<td class="chart"><button class="btn btn-success" ng-click="ctrl.makeChart(item.ticker)">!</button></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>Total Book Value:</td>
+					<td><b>{{ctrl.totalBookValue | currency}}</b></td>
+					<td>Total Market Value:</td>
+					<td><b>{{ctrl.protfolioTotal | currency}}</b></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tfoot>
+		</table>
+		
+		<br>
+	</div>
+	<!-- PORTFOLIO TABLE - END -->
+	
+	<div class="col-sm-12">
+		<br>
+		<hr class="style-one">
+	</div>
+
+
+	<!-- ADD STOCK CHART HERE -->
+	<div id="graph"></div>
+	<div class="col-sm-12">
+		<h3 id="chartTitle">{{ctrl.chartTitle}}</h3>
+	</div>
+	<div class="col-sm-10 col-sm-offset-1" id="canvas-wrapper">
+		
+		<canvas id="canvas"></canvas>
+	</div>
+
+	<div class="col-sm-12">
+		<br>
+		<hr class="style-one">
+	</div>
+
+	<!-- ADD STOCK FORM -->
+	<div class="col-sm-10 col-sm-offset-1" id="addStock">
+		<span name="graph"></span>
+		<h3>Add Stock to Portfolio:</h3>
+		<div>
+			<div class="col-sm-6">
+				<!-- Car Make -->
+				<div class="form-group">
+					<label>Ticker:</label>
+					<input ng-model="ctrl.addTicker" class="form-control" type="text" required></input>
+				</div>
+				<!-- Car Model -->
+				<div class="form-group">
+					<label>Purchase Price:</label>
+					<input ng-model="ctrl.addPurchasePrice" class="form-control" type="text" required></input>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<!-- Car Year -->
+				<div class="form-group">
+					<label>Units Owned:</label>
+					<input ng-model="ctrl.addQuantity" class="form-control" type="text" required></input>
+				</div>
+				<!-- Button: Add Product -->
+				<button class="btn" ng-click="ctrl.addStock()">Add Stock</button>
+			</div>
+		</div>
+	</div>
+	<!-- ADD STOCK FORM - END -->
+
+
+	<!-- MODAL : EDIT -->
+	<div id="myModal" class="modal">
+	  <div class="modal-content">
+	    <span class="close">x</span>
+	    <h2 class="text-center">Update the {{ctrl.modalTicker}} stock entry</h2>
+	    <br>
+	    <div class="row">
+	    	<div class="col-sm-6">
+				<!-- Car Make -->
+				<div class="form-group">
+					<label>Ticker:</label>
+					<input ng-model="ctrl.modalTicker" class="form-control" type="text" required></input>
+				</div>
+				<!-- Car Model -->
+				<div class="form-group">
+					<label>Purhcase Price:</label>
+					<input ng-model="ctrl.modalPurchasePrice" class="form-control" type="text" required></input>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<!-- Car Year -->
+				<div class="form-group">
+					<label>Quantity:</label>
+					<input ng-model="ctrl.modalQuantity" class="form-control" type="text" required></input>
+				</div>
+				<!-- Button: Add Product -->
+				<button class="btn" ng-click="ctrl.updateStockAct()">Update Stock</button>	
+			</div>
+	    </div>
+	    <p class="text-center newFont"></p>
+	  </div>
+	</div>
+	<!-- MODAL - END -->
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
